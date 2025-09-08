@@ -1,9 +1,9 @@
 """Defines the HabitTracker class to manage collections of habits and coordinate operations."""
 
-from models import Habit, Periodicity
+from src.models import Habit, Periodicity
 from datetime import datetime, timedelta
 from typing import List, Dict, Optional, Any
-from data import DataManager
+from src.data import DataManager
 
 
 class HabitTracker:

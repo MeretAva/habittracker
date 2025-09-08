@@ -1,7 +1,15 @@
+"""Defines the DataManager class to manage all database operations for HabitTracker."""
+
+import sqlite3
+from datetime import datetime
+from typing import List, Dict, Any, Optional
+from src.models import Habit, Periodicity
+
+
 class DataManager:
     """Handles all database operations for HabitTracker."""
 
-    def __init__(self, db_path: str = "habittracker.db"):
+    def __init__(self, db_path: str = "database/habittracker.db"):
         self.db_path = db_path
         self.create_database()
 
@@ -37,29 +45,20 @@ class DataManager:
 
             conn.commit()
 
-
-class DataManager:
-    def __init__(self, connection, db_path="habittracker.db"):
-        self.connection = connection
+    def save_habit(self):
         pass
 
-    def create_tables():
+    def load_habits(self):
         pass
 
-    def save_habit(habit=Habit):
+    def save_completion(self):
         pass
 
-    def load_habits():
+    def load_completions(self):
         pass
 
-    def save_completion(habit_id, timestamp):
+    def delete_habit(self):
         pass
 
-    def load_completions(habit_id):
-        pass
-
-    def delete_habit(habit_id):
-        pass
-
-    def close_connection():
+    def close_connection(self):
         pass

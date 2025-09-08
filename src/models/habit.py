@@ -45,8 +45,8 @@ class Habit:
         if timestamp is None:
             timestamp = datetime.now()
 
-            # Add the completion to timestamp list
-            self.completions.append(timestamp)
+        # Add the completion to timestamp list
+        self.completions.append(timestamp)
 
     def get_current_streak(self) -> int:
         """
