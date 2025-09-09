@@ -18,7 +18,7 @@ class HabitTracker:
         records = self.data_manager.load_habits()
         for record in records:
             habit = Habit(
-                id=record["id"],
+                habit_id=record["id"],
                 name=record["name"],
                 description=record["description"],
                 periodicity=Periodicity(record["periodicity"]),
@@ -26,20 +26,6 @@ class HabitTracker:
                 completions=self.data_manager.load_completions(record["id"]),
             )
             self.habits[habit.id] = habit
-
-    # def add_habit(self, name: str, description: str, periodicity: Periodicity) -> Habit:
-    #     habit = Habit(
-    #         id=None,
-    #         name=name,
-    #         description=description,
-    #         periodicity=periodicity,
-    #         created_date=datetime.now(),
-    #         completions=[],
-    #     )
-    #     habit_id = self.data_manager.insert_habit(habit)
-    #     habit.id = habit_id
-    #     self.habits[habit_id] = habit
-    #     return habit
 
     def add_habit(self, habit: Habit):
         if habit.id is None:
@@ -70,16 +56,9 @@ class HabitTracker:
         timestamp = datetime.now()
         self.data_manager.insert_completion(habit_id, timestamp)
         habit.completions.append(timestamp)
-        return habit.calculate_streak()
-
-    def save_habits(self) -> None:
-        for habit in self.habits.values():
-            self.data_manager.update_habit(habit)
+        return habit.get_current_streak()
 
     def get_habits_by_periodicity(self, periodicity: Periodicity) -> List[Habit]:
         return [
             habit for habit in self.habits.values() if habit.periodicity == periodicity
         ]
-
-    def list_habits(self) -> List[Habit]:
-        return list(self.habits.values())

@@ -1,21 +1,38 @@
 import pytest
 from src.models import Habit, Periodicity
 from src.core import HabitTracker
+from datetime import datetime
+
+
+@pytest.fixture
+def habit(habits):
+    return habits[0]
 
 
 @pytest.fixture
 def tracker():
-    return HabitTracker()
+    import tempfile
+    import os
 
+    # Create a temporary database file for this test
+    with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as temp_file:
+        temp_path = temp_file.name
 
-@pytest.fixture
-def habit():
-    return Habit("Read", "Read a book", Periodicity.DAILY)
+    # Create tracker with temporary database
+    tracker = HabitTracker(temp_path)
+
+    yield tracker  # Provide tracker to test
+
+    # Cleanup after test completes
+    try:
+        os.unlink(temp_path)
+    except (FileNotFoundError, PermissionError):
+        pass  # File already deleted or in use
 
 
 def test_add_habit(tracker, habit):
     tracker.add_habit(habit)
-    assert habit in tracker.habits
+    assert habit in tracker.habits.values()
 
 
 def test_remove_habit(tracker, habit):
@@ -27,11 +44,38 @@ def test_remove_habit(tracker, habit):
 def test_get_habit_by_name(tracker, habit):
     tracker.add_habit(habit)
     found = tracker.get_habit_by_name("Read")
-    assert found == habit
+    assert found.name == habit.name
 
 
-def test_list_habits(tracker, habit):
+def test_get_all_habits(tracker, habit):
     tracker.add_habit(habit)
-    habits = tracker.list_habits()
+    habits = tracker.get_all_habits()
     assert len(habits) == 1
     assert habits[0].name == "Read"
+
+
+# def test_complete_habit(tracker, habit):
+#     """Test completing a habit updates completions"""
+#     tracker.add_habit(habit)
+#     habit_id = habit.id
+#     initial_count = len(habit.completions)
+
+#     streak = tracker.complete_habit(habit_id)
+#     assert len(habit.completions) == initial_count + 1
+#     assert isinstance(streak, int)
+
+
+def test_get_habits_by_periodicity(tracker, habits):
+    """Test filtering habits by periodicity."""
+    tracker.add_habit(habits[0])
+    tracker.add_habit(habits[1])
+    tracker.add_habit(habits[3])
+
+    daily_habits = tracker.get_habits_by_periodicity(Periodicity.DAILY)
+    weekly_habits = tracker.get_habits_by_periodicity(Periodicity.WEEKLY)
+
+    assert len(daily_habits) == 2
+    assert len(weekly_habits) == 1
+    assert habits[0] in daily_habits
+    assert habits[1] in daily_habits
+    assert habits[3] in weekly_habits

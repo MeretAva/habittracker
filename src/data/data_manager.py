@@ -87,7 +87,7 @@ class DataManager:
                 }
             return None
 
-    def save_habit(self, habit: Habit) -> int:
+    def insert_habit(self, habit: Habit) -> int:
         """
         Insert a new habit into the database.
 
@@ -150,7 +150,7 @@ class DataManager:
 
             return habits
 
-    def save_completion(self, habit_id: int, timestamp: datetime):
+    def insert_completion(self, habit_id: int, timestamp: datetime):
         """
         Insert a habit completion into the database.
 

@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime, timedelta
-from src.models import Periodicity
+from src.models import Habit, Periodicity
 
 
 @pytest.mark.usefixtures("habits")
@@ -48,3 +48,12 @@ def test_to_dict(habits):
     assert "periodicity" in d
     assert "created_date" in d
     assert "completions" in d
+
+
+def test_habit_creation():
+    """Test creating a new habit with basic parameters."""
+    habit = Habit("Exercise", "30 minute morning workout", "daily")
+    assert habit.name == "Exercise"
+    assert habit.periodicity == Periodicity.DAILY
+    assert habit.id is None
+    assert len(habit.completions) == 0

@@ -12,7 +12,13 @@ class Habit:
     """
 
     def __init__(
-        self, name, description, periodicity, created_date=None, habit_id=None
+        self,
+        name,
+        description,
+        periodicity,
+        created_date=None,
+        habit_id=None,
+        completions=None,
     ):
         """
         Initialize a new Habit instance.
@@ -23,6 +29,7 @@ class Habit:
             periodicity (Periodicity or str): How often the habit should be completed.
             created_date (datetime, optional): When the habit was created.
             habit_id (Any, optional): Unique identifier for the habit.
+            completions (List, optional): List of all the times the habit has been completed.
         """
         if isinstance(periodicity, str):
             # Convert string to enum
@@ -37,7 +44,7 @@ class Habit:
         self.description = description
         self.periodicity = periodicity
         self.created_date = created_date if created_date else datetime.now()
-        self.completions = []
+        self.completions = completions if completions is not None else []
 
     def mark_completed(self, timestamp: Optional[datetime] = None):
         """Mark the habit as completed at the given timestamp.
@@ -47,6 +54,16 @@ class Habit:
 
         # Add the completion to timestamp list
         self.completions.append(timestamp)
+
+    def get_current_streak(self) -> int:
+        from src.analytics import calculate_current_streak
+
+        return calculate_current_streak(self.completions, self.periodicity)
+
+    def get_longest_streak(self) -> int:
+        from src.analytics import calculate_longest_streak
+
+        return calculate_longest_streak(self.completions, self.periodicity)
 
     # def get_current_streak(self) -> int:
     #     """
