@@ -27,19 +27,25 @@ class HabitTracker:
             )
             self.habits[habit.id] = habit
 
-    def add_habit(self, name: str, description: str, periodicity: Periodicity) -> Habit:
-        habit = Habit(
-            id=None,
-            name=name,
-            description=description,
-            periodicity=periodicity,
-            created_date=datetime.now(),
-            completions=[],
-        )
-        habit_id = self.data_manager.insert_habit(habit)
-        habit.id = habit_id
-        self.habits[habit_id] = habit
-        return habit
+    # def add_habit(self, name: str, description: str, periodicity: Periodicity) -> Habit:
+    #     habit = Habit(
+    #         id=None,
+    #         name=name,
+    #         description=description,
+    #         periodicity=periodicity,
+    #         created_date=datetime.now(),
+    #         completions=[],
+    #     )
+    #     habit_id = self.data_manager.insert_habit(habit)
+    #     habit.id = habit_id
+    #     self.habits[habit_id] = habit
+    #     return habit
+
+    def add_habit(self, habit: Habit):
+        if habit.id is None:
+            habit_id = self.data_manager.insert_habit(habit)
+            habit.id = habit_id
+        self.habits[habit.id] = habit
 
     def remove_habit(self, habit_id: int) -> bool:
         if habit_id not in self.habits:
@@ -52,10 +58,10 @@ class HabitTracker:
         for habit in self.habits.values():
             if habit.name == name:
                 return habit
-            return None
+        return None
 
-        def get_all_habits(self) -> List[Habit]:
-            return list(self.habits.values())
+    def get_all_habits(self) -> List[Habit]:
+        return list(self.habits.values())
 
     def complete_habit(self, habit_id: int) -> Optional[int]:
         habit = self.habits.get(habit_id)
@@ -66,33 +72,14 @@ class HabitTracker:
         habit.completions.append(timestamp)
         return habit.calculate_streak()
 
-
-def save_habits(self) -> None:
-    for habit in self.habits.values():
-        self.data_manager.update_habit(habit)
-
-    def initialize_predefined_habits(self) -> None:
-        predefined = [
-            ("Drink water", "Drink 2 liters of water", Periodicity.DAILY),
-            ("Exercise", "30 minutes workout", Periodicity.DAILY),
-            ("Read book", "Read 20 pages", Periodicity.DAILY),
-            ("Weekly review", "Reflect on weekly goals", Periodicity.WEEKLY),
-            ("Call family", "Catch up with loved ones", Periodicity.WEEKLY),
-        ]
-        for name, desc, per in predefined:
-            habit = self.add_habit(name, desc, per)
-            # Generate 4 weeks of example completions
-            base = datetime.now() - timedelta(weeks=4)
-            for i in range(28 if per == Periodicity.DAILY else 4):
-                ts = base + (
-                    timedelta(days=i)
-                    if per == Periodicity.DAILY
-                    else timedelta(weeks=i)
-                )
-                self.data_manager.insert_completion(habit.id, ts)
-                habit.completions.append(ts)
+    def save_habits(self) -> None:
+        for habit in self.habits.values():
+            self.data_manager.update_habit(habit)
 
     def get_habits_by_periodicity(self, periodicity: Periodicity) -> List[Habit]:
         return [
             habit for habit in self.habits.values() if habit.periodicity == periodicity
         ]
+
+    def list_habits(self) -> List[Habit]:
+        return list(self.habits.values())

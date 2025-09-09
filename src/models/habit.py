@@ -48,93 +48,93 @@ class Habit:
         # Add the completion to timestamp list
         self.completions.append(timestamp)
 
-    def get_current_streak(self) -> int:
-        """
-        Calculate the current streak of consecutive completions up to today (daily) or this week (weekly).
+    # def get_current_streak(self) -> int:
+    #     """
+    #     Calculate the current streak of consecutive completions up to today (daily) or this week (weekly).
 
-        Returns:
-            int: The current streak count.
-        """
-        if not self.completions:
-            return 0
-        # Sort completions in ascending order
-        completions = sorted([dt.date() for dt in self.completions])
-        streak = 0
-        today = datetime.now().date()
+    #     Returns:
+    #         int: The current streak count.
+    #     """
+    #     if not self.completions:
+    #         return 0
+    #     # Sort completions in ascending order
+    #     completions = sorted([dt.date() for dt in self.completions])
+    #     streak = 0
+    #     today = datetime.now().date()
 
-        if self.periodicity == Periodicity.DAILY:
-            # Count consecutive days from today backwards
-            day = today
-            idx = len(completions) - 1
-            while idx >= 0 and completions[idx] == day:
-                streak += 1
-                day -= timedelta(days=1)
-                idx -= 1
-            return streak
+    #     if self.periodicity == Periodicity.DAILY:
+    #         # Count consecutive days from today backwards
+    #         day = today
+    #         idx = len(completions) - 1
+    #         while idx >= 0 and completions[idx] == day:
+    #             streak += 1
+    #             day -= timedelta(days=1)
+    #             idx -= 1
+    #         return streak
 
-        elif self.periodicity == Periodicity.WEEKLY:
-            # Count consecutive weeks from current week backwards
-            # Find the Monday of the current week
-            week_start = today - timedelta(days=today.weekday())
-            idx = len(completions) - 1
-            while (
-                idx >= 0
-                and completions[idx] >= week_start
-                and completions[idx] <= today
-            ):
-                streak += 1
-                # Move to previous week
-                week_start -= timedelta(days=7)
-                today = week_start + timedelta(days=6)
-                # Find if there's a completion in that week
-                found = False
-                for j in range(idx, -1, -1):
-                    if completions[j] >= week_start and completions[j] <= today:
-                        idx = j
-                        found = True
-                        break
-                if not found:
-                    break
-            return streak
+    #     elif self.periodicity == Periodicity.WEEKLY:
+    #         # Count consecutive weeks from current week backwards
+    #         # Find the Monday of the current week
+    #         week_start = today - timedelta(days=today.weekday())
+    #         idx = len(completions) - 1
+    #         while (
+    #             idx >= 0
+    #             and completions[idx] >= week_start
+    #             and completions[idx] <= today
+    #         ):
+    #             streak += 1
+    #             # Move to previous week
+    #             week_start -= timedelta(days=7)
+    #             today = week_start + timedelta(days=6)
+    #             # Find if there's a completion in that week
+    #             found = False
+    #             for j in range(idx, -1, -1):
+    #                 if completions[j] >= week_start and completions[j] <= today:
+    #                     idx = j
+    #                     found = True
+    #                     break
+    #             if not found:
+    #                 break
+    #         return streak
 
-        return 0
+    #     return 0
 
-    def get_longest_streak(self):
-        """
-        Calculate the longest streak of consecutive completions (daily or weekly).
-        Returns:
-            int: The longest streak count.
-        """
-        if not self.completions:
-            return 0
+    # def get_longest_streak(self):
+    #     """
+    #     Calculate the longest streak of consecutive completions (daily or weekly).
+    #     Returns:
+    #         int: The longest streak count.
+    #     """
+    #     if not self.completions:
+    #         return 0
 
-        completions = sorted([dt.date() for dt in self.completions])
+    #     completions = sorted([dt.date() for dt in self.completions])
 
-        if self.periodicity == Periodicity.DAILY:
-            longest = current = 1
-            for i in range(1, len(completions)):
-                if (completions[i] - completions[i - 1]).days == 1:
-                    current += 1
-                else:
-                    longest = max(longest, current)
-                    current = 1
-            longest = max(longest, current)
-            return longest
+    #     if self.periodicity == Periodicity.DAILY:
+    #         longest = current = 1
+    #         for i in range(1, len(completions)):
+    #             if (completions[i] - completions[i - 1]).days == 1:
+    #                 current += 1
+    #             else:
+    #                 longest = max(longest, current)
+    #                 current = 1
+    #         longest = max(longest, current)
+    #         return longest
 
-        elif self.periodicity == Periodicity.WEEKLY:
-            # Get the week start (Monday) for each completion
-            weeks = [dt - timedelta(days=dt.weekday()) for dt in completions]
-            longest = current = 1
-            for i in range(1, len(weeks)):
-                if (weeks[i] - weeks[i - 1]).days == 7:
-                    current += 1
-                else:
-                    longest = max(longest, current)
-                    current = 1
-            longest = max(longest, current)
-            return longest
+    #     elif self.periodicity == Periodicity.WEEKLY:
+    #         # Get the week start (Monday) for each completion
+    #         weeks = [dt - timedelta(days=dt.weekday()) for dt in completions]
+    #         longest = current = 1
+    #         for i in range(1, len(weeks)):
+    #             if (weeks[i] - weeks[i - 1]).days == 7:
+    #                 current += 1
+    #             else:
+    #                 longest = max(longest, current)
+    #                 current = 1
+    #         longest = max(longest, current)
+    #         return longest
 
-        return 0
+    #     return 0
 
     def is_due(self) -> bool:
         """
@@ -198,11 +198,11 @@ class Habit:
 
         return False
 
-    def get_completion_count(self) -> int:
-        """Return the total number of times this habit has been completed.
-        Returns: int: The total count of completions."""
+    # def get_completion_count(self) -> int:
+    #     """Return the total number of times this habit has been completed.
+    #     Returns: int: The total count of completions."""
 
-        return len(self.completions)
+    #     return len(self.completions)
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert the habit to a dictionary representation.
