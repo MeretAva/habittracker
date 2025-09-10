@@ -51,7 +51,6 @@ def test_to_dict(habits):
 
 
 def test_habit_creation():
-    """Test creating a new habit with basic parameters."""
     habit = Habit("Exercise", "30 minute morning workout", "daily")
     assert habit.name == "Exercise"
     assert habit.periodicity == Periodicity.DAILY

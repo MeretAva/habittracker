@@ -3,6 +3,7 @@
 from datetime import datetime, timedelta
 from typing import List, Dict, Optional, Any
 from .periodicity import Periodicity
+from src.analytics import calculate_current_streak, calculate_longest_streak
 
 
 class Habit:
@@ -48,110 +49,38 @@ class Habit:
 
     def mark_completed(self, timestamp: Optional[datetime] = None):
         """Mark the habit as completed at the given timestamp.
-        Args: timestamp: When the habit was completed. Defaults to current time."""
+        Args: timestamp: When the habit was completed. Defaults to current time.
+        Raises: ValueError: if habit already completed in the same period."""
         if timestamp is None:
             timestamp = datetime.now()
+
+        # Check for existing completion in same period
+        completion_date = timestamp.date()
+
+        if self.periodicity == Periodicity.DAILY:
+            # Check if completed today
+            if any(comp.date() == completion_date for comp in self.completions):
+                raise ValueError(f"Habit '{self.name}' already completed today")
+
+        elif self.periodicity == Periodicity.WEEKLY:
+            # Check if already completed this week
+            days_since_monday = completion_date.weekday()
+            week_start = completion_date - timedelta(days=days_since_monday)
+            week_end = week_start + timedelta(days=6)
+
+            if any(week_start <= comp.date() <= week_end for comp in self.completions):
+                raise ValueError(f"Habit '{self.name}' already completed this week")
 
         # Add the completion to timestamp list
         self.completions.append(timestamp)
 
     def get_current_streak(self) -> int:
-        from src.analytics import calculate_current_streak
-
+        """Calculate current streak using analytics module"""
         return calculate_current_streak(self.completions, self.periodicity)
 
     def get_longest_streak(self) -> int:
-        from src.analytics import calculate_longest_streak
-
+        """Calculate longest streak using analytics module"""
         return calculate_longest_streak(self.completions, self.periodicity)
-
-    # def get_current_streak(self) -> int:
-    #     """
-    #     Calculate the current streak of consecutive completions up to today (daily) or this week (weekly).
-
-    #     Returns:
-    #         int: The current streak count.
-    #     """
-    #     if not self.completions:
-    #         return 0
-    #     # Sort completions in ascending order
-    #     completions = sorted([dt.date() for dt in self.completions])
-    #     streak = 0
-    #     today = datetime.now().date()
-
-    #     if self.periodicity == Periodicity.DAILY:
-    #         # Count consecutive days from today backwards
-    #         day = today
-    #         idx = len(completions) - 1
-    #         while idx >= 0 and completions[idx] == day:
-    #             streak += 1
-    #             day -= timedelta(days=1)
-    #             idx -= 1
-    #         return streak
-
-    #     elif self.periodicity == Periodicity.WEEKLY:
-    #         # Count consecutive weeks from current week backwards
-    #         # Find the Monday of the current week
-    #         week_start = today - timedelta(days=today.weekday())
-    #         idx = len(completions) - 1
-    #         while (
-    #             idx >= 0
-    #             and completions[idx] >= week_start
-    #             and completions[idx] <= today
-    #         ):
-    #             streak += 1
-    #             # Move to previous week
-    #             week_start -= timedelta(days=7)
-    #             today = week_start + timedelta(days=6)
-    #             # Find if there's a completion in that week
-    #             found = False
-    #             for j in range(idx, -1, -1):
-    #                 if completions[j] >= week_start and completions[j] <= today:
-    #                     idx = j
-    #                     found = True
-    #                     break
-    #             if not found:
-    #                 break
-    #         return streak
-
-    #     return 0
-
-    # def get_longest_streak(self):
-    #     """
-    #     Calculate the longest streak of consecutive completions (daily or weekly).
-    #     Returns:
-    #         int: The longest streak count.
-    #     """
-    #     if not self.completions:
-    #         return 0
-
-    #     completions = sorted([dt.date() for dt in self.completions])
-
-    #     if self.periodicity == Periodicity.DAILY:
-    #         longest = current = 1
-    #         for i in range(1, len(completions)):
-    #             if (completions[i] - completions[i - 1]).days == 1:
-    #                 current += 1
-    #             else:
-    #                 longest = max(longest, current)
-    #                 current = 1
-    #         longest = max(longest, current)
-    #         return longest
-
-    #     elif self.periodicity == Periodicity.WEEKLY:
-    #         # Get the week start (Monday) for each completion
-    #         weeks = [dt - timedelta(days=dt.weekday()) for dt in completions]
-    #         longest = current = 1
-    #         for i in range(1, len(weeks)):
-    #             if (weeks[i] - weeks[i - 1]).days == 7:
-    #                 current += 1
-    #             else:
-    #                 longest = max(longest, current)
-    #                 current = 1
-    #         longest = max(longest, current)
-    #         return longest
-
-    #     return 0
 
     def is_due(self) -> bool:
         """

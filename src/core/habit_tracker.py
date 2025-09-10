@@ -4,6 +4,12 @@ from src.models import Habit, Periodicity
 from datetime import datetime, timedelta
 from typing import List, Dict, Optional, Any
 from src.data import DataManager
+from src.analytics import (
+    get_all_habits,
+    get_habits_by_periodicity,
+    get_longest_streak_all_habits,
+    get_longest_streak_for_habit,
+)
 
 
 class HabitTracker:
@@ -47,18 +53,35 @@ class HabitTracker:
         return None
 
     def get_all_habits(self) -> List[Habit]:
-        return list(self.habits.values())
+        """Return a list of all currently tracked habits using analytics module."""
+        return get_all_habits(list(self.habits.values()))
 
     def complete_habit(self, habit_id: int) -> Optional[int]:
         habit = self.habits.get(habit_id)
         if not habit:
             return None
-        timestamp = datetime.now()
-        self.data_manager.insert_completion(habit_id, timestamp)
-        habit.completions.append(timestamp)
-        return habit.get_current_streak()
+        try:
+            timestamp = datetime.now()
+            # This will raise ValueError if already completed in same period
+            habit.mark_completed(timestamp)
+            self.data_manager.insert_completion(habit_id, timestamp)
+            habit.completions.append(timestamp)
+            return habit.get_current_streak()
+        except ValueError as e:
+            # Re-raise the validation error from mark_completed
+            raise e
 
     def get_habits_by_periodicity(self, periodicity: Periodicity) -> List[Habit]:
-        return [
-            habit for habit in self.habits.values() if habit.periodicity == periodicity
-        ]
+        """Return habits with specified periodicity using analytics module."""
+        return get_habits_by_periodicity(list(self.habits.values()), periodicity)
+
+    def get_longest_streak_all_habits(self) -> int:
+        """Return the longest streak across all habits using analytics module."""
+        return get_longest_streak_all_habits(list(self.habits.values()))
+
+    def get_longest_streak_for_habit(self, habit_id: int) -> Optional[int]:
+        """Return longest streak for a specific habit using analytics module."""
+        habit = self.habits.get(habit_id)
+        if not habit:
+            return None
+        return get_longest_streak_for_habit(habit)

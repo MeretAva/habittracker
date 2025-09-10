@@ -66,7 +66,6 @@ def test_get_all_habits(tracker, habit):
 
 
 def test_get_habits_by_periodicity(tracker, habits):
-    """Test filtering habits by periodicity."""
     tracker.add_habit(habits[0])
     tracker.add_habit(habits[1])
     tracker.add_habit(habits[3])
