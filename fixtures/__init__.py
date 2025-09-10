@@ -1,3 +1,3 @@
 """Exposes predefined test data for use in unit tests."""
 
-from .test_data import predefined_habits
+from .test_data import create_predefined_habits

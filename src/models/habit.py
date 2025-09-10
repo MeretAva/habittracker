@@ -77,13 +77,13 @@ class Habit:
         """Calculate current streak using analytics module"""
         from ..analytics import calculate_current_streak
 
-        return calculate_current_streak(self.completions, self.periodicity)
+        return calculate_current_streak(self.completions, self.periodicity.value)
 
     def get_longest_streak(self) -> int:
         """Calculate longest streak using analytics module"""
         from ..analytics import calculate_longest_streak
 
-        return calculate_longest_streak(self.completions, self.periodicity)
+        return calculate_longest_streak(self.completions, self.periodicity.value)
 
     def is_due(self) -> bool:
         """
