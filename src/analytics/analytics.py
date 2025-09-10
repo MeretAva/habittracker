@@ -6,18 +6,15 @@ All functions are pure functions with no side effects.
 
 from datetime import datetime, timedelta
 from typing import List
-from src.models.periodicity import Periodicity
 
 
-def calculate_current_streak(
-    completions: List[datetime], periodicity: Periodicity
-) -> int:
+def calculate_current_streak(completions: List[datetime], periodicity: str) -> int:
     """
     Calculate the current streak of consecutive completions up to today (daily) or this week (weekly).
 
     Args:
         completions: List of completion timestamps
-        periodicity: Either Periodicity.DAILY or Periodicity.WEEKLY
+        periodicity: String either "daily" or "weekly"
 
     Returns:
         int: The current streak count.
@@ -29,7 +26,7 @@ def calculate_current_streak(
     sorted_completions = sorted([dt.date() for dt in completions], reverse=True)
     today = datetime.now().date()
 
-    if periodicity == Periodicity.DAILY:
+    if periodicity == "daily":
         streak = 0
         expected_date = today
 
@@ -43,7 +40,7 @@ def calculate_current_streak(
 
         return streak
 
-    elif periodicity == Periodicity.WEEKLY:
+    elif periodicity == "weekly":
         streak = 0
         # Find Monday of current week
         days_since_monday = today.weekday()
@@ -67,9 +64,7 @@ def calculate_current_streak(
     return 0
 
 
-def calculate_longest_streak(
-    completions: List[datetime], periodicity: Periodicity
-) -> int:
+def calculate_longest_streak(completions: List[datetime], periodicity: str) -> int:
     """
     Calculate the longest streak of consecutive completions (daily or weekly).
 
@@ -86,7 +81,7 @@ def calculate_longest_streak(
 
     completions = sorted([dt.date() for dt in completions])
 
-    if periodicity == Periodicity.DAILY:
+    if periodicity == "daily":
         longest = current = 1
         for i in range(1, len(completions)):
             if (completions[i] - completions[i - 1]).days == 1:
@@ -97,7 +92,7 @@ def calculate_longest_streak(
         longest = max(longest, current)
         return longest
 
-    elif periodicity == Periodicity.WEEKLY:
+    elif periodicity == "weekly":
         # Get the week start (Monday) for each completion
         weeks = [dt - timedelta(days=dt.weekday()) for dt in completions]
         longest = current = 1
@@ -127,7 +122,7 @@ def get_all_habits(habits: List) -> List:
     return habits.copy() if habits else []
 
 
-def get_habits_by_periodicity(habits: List, periodicity: Periodicity) -> List:
+def get_habits_by_periodicity(habits: List, periodicity: str) -> List:
     """
     Return a list of all habits with the same periodicity.
     Pure function using filter.
@@ -139,7 +134,7 @@ def get_habits_by_periodicity(habits: List, periodicity: Periodicity) -> List:
     Returns:
         List: Habits matching the specified periodicity
     """
-    return [habit for habit in habits if habit.periodicity == periodicity]
+    return [habit for habit in habits if habit.periodicity.value == periodicity]
 
 
 def get_longest_streak_all_habits(habits: List) -> int:

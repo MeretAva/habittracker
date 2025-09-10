@@ -3,7 +3,6 @@
 from datetime import datetime, timedelta
 from typing import List, Dict, Optional, Any
 from .periodicity import Periodicity
-from src.analytics import calculate_current_streak, calculate_longest_streak
 
 
 class Habit:
@@ -76,10 +75,14 @@ class Habit:
 
     def get_current_streak(self) -> int:
         """Calculate current streak using analytics module"""
+        from ..analytics import calculate_current_streak
+
         return calculate_current_streak(self.completions, self.periodicity)
 
     def get_longest_streak(self) -> int:
         """Calculate longest streak using analytics module"""
+        from ..analytics import calculate_longest_streak
+
         return calculate_longest_streak(self.completions, self.periodicity)
 
     def is_due(self) -> bool:

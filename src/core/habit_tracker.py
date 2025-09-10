@@ -1,10 +1,10 @@
 """Defines the HabitTracker class to manage collections of habits and coordinate operations."""
 
-from src.models import Habit, Periodicity
+from ..models import Habit, Periodicity
 from datetime import datetime, timedelta
 from typing import List, Dict, Optional, Any
-from src.data import DataManager
-from src.analytics import (
+from ..data import DataManager
+from ..analytics import (
     get_all_habits,
     get_habits_by_periodicity,
     get_longest_streak_all_habits,
@@ -73,7 +73,7 @@ class HabitTracker:
 
     def get_habits_by_periodicity(self, periodicity: Periodicity) -> List[Habit]:
         """Return habits with specified periodicity using analytics module."""
-        return get_habits_by_periodicity(list(self.habits.values()), periodicity)
+        return get_habits_by_periodicity(list(self.habits.values()), periodicity.value)
 
     def get_longest_streak_all_habits(self) -> int:
         """Return the longest streak across all habits using analytics module."""
