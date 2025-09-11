@@ -183,7 +183,7 @@ def analytics(ctx):
     if due_habits:
         click.echo(f"\nHABITS DUE:")
         for habit in due_habits:
-        click.echo(f"   • {habit.name}")
+            click.echo(f"   • {habit.name}")
 
     if broken_habits:
         click.echo(f"\nBROKEN HABITS:")
