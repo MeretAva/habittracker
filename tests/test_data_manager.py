@@ -1,4 +1,4 @@
-"""Tests for DataManager class - database operations for habit tracking."""
+"""Unit Tests covering the DataManager Class."""
 
 import pytest
 import tempfile

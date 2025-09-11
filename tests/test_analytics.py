@@ -1,4 +1,4 @@
-"""Unit tests for the analytics module."""
+""" "Unit Tests covering the Analytics Functionality."""
 
 import pytest
 from datetime import datetime, timedelta

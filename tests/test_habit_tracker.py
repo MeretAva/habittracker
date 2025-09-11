@@ -1,3 +1,5 @@
+"""Unit Tests covering the HabitTracker Class."""
+
 import pytest
 from src.models import Habit, Periodicity
 from src.core import HabitTracker

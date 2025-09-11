@@ -1,3 +1,5 @@
+"""Lists dependencies of the project."""
+
 # Core dependencies
 click>=8.0.0
 pytest>=7.0.0

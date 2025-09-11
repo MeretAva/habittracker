@@ -1,127 +1,167 @@
+"""Usage Guide of the HabitTracker CLI including instructions on installation, quick start commands, available commands, and examples."""
+
 # HabitTracker CLI Usage Guide
-
-## Installation
-
-First, install the package:
-
-```bash
-pip install -e .
-```
-
-This creates two commands:
-
-- `habittracker` (full name)
-- `ht` (short alias)
 
 ## Quick Start
 
+All commands are now **interactive** - just run the command and follow the prompts.
+
 ```bash
-# Add a daily habit
-python main.py add "Read" "Read one chapter daily" --periodicity daily
+# Run the app
+python main.py
 
-# Add a weekly habit  
-python main.py add "Exercise" "Go to gym" --periodicity weekly
+# Add a new habit (interactive)
+python main.py add
 
-# Complete a habit
-python main.py complete "Read"
+# Complete a habit (interactive selection)
+python main.py complete
 
-# List all habits
-python main.py list
+# View habit status (interactive selection)
+python main.py status
 
-# Show habit details
-python main.py status "Read"
+# Remove a habit (interactive selection)
+python main.py remove
 
 # View analytics
-python main.py analytics
-
-# Remove a habit
-python main.py remove "Read"
+python main.py analytics <subcommand>
 ```
 
-## Available Commands
+## Interactive Commands
 
-### `add NAME DESCRIPTION [OPTIONS]`
+### `add`
 
-Add a new habit to track.
+Creates a new habit with guided prompts:
 
-Options:
+1. **Name**: What to call your habit
+2. **Description**: What the habit involves (required)
+3. **Frequency**: Choose between Daily (1) or Weekly (2)
 
-- `-p, --periodicity [daily|weekly]`: How often to complete (default: daily)
+Example interaction:
 
-Example:
+```
+$ python main.py add
 
-```bash
-python main.py add "Meditate" "10 minutes daily meditation" -p daily
+Let's create a new habit!
+What would you like to call this habit?: Read
+Enter a description (what does this habit involve?): Read for 30 minutes
+
+How often should this habit be completed?
+1. Daily
+2. Weekly
+Please select (1 or 2): 1
+
+✓ Added habit 'Read' (daily)
+  Description: Read for 30 minutes
 ```
 
-### `complete NAME`
+### `complete`
 
-Mark a habit as completed for the current period.
+Shows a numbered list of all your habits. Select which one to mark as completed:
 
-Example:
+```
+$ python main.py complete
 
-```bash
-python main.py complete "Meditate"
+Select a habit to mark as completed:
+5 habit(s) found:
+--------------------------------------------------
+
+1. ✴️ Read (daily)
+   Read for 30 minutes
+   Current streak: 5 | Longest: 12
+   Status: ✓
+
+2. ⏸️ Exercise (daily)
+   Go to the gym
+   Current streak: 0 | Longest: 3
+   Status: DUE
+
+Select habit number (or 0 to cancel): 1
+✓ Completed 'Read' - Current streak: 6
 ```
 
-### `list [OPTIONS]`
+### `remove`
 
-List all tracked habits with current status.
+Shows all habits and lets you select which to remove:
 
-Options:
+```
+$ python main.py remove
 
-- `-p, --periodicity [daily|weekly|all]`: Filter by periodicity (default: all)
-
-Example:
-
-```bash
-python main.py list -p daily
+Select a habit to remove:
+Are you sure you want to remove 'Exercise'? [y/N]: y
+✓ Removed habit 'Exercise'
 ```
 
-### `status NAME`
+### `status`
 
-Show detailed information about a specific habit.
+Shows all habits, then displays detailed information for your selection:
 
-Example:
+```
+$ python main.py status
 
-```bash
-python main.py status "Meditate"
+Select habit number (or 0 to cancel): 1
+
+--- DETAILED STATUS ---
+Habit: Read
+Description: Read for 30 minutes
+Periodicity: daily
+Created: 2024-01-15
+Total completions: 23
+Current streak: 6
+Longest streak: 12
+Status: This habit is up to date
+Last completed: 2024-01-20 19:30
 ```
 
-### `analytics`
+## Analytics Commands
 
-Display comprehensive analytics and insights about all habits.
+Analytics has specific subcommands for detailed insights:
 
-Shows:
-
-- Total habit counts
-- Active streaks
-- Habits due today/this week
-- Broken habits
-- Longest streaks
-
-### `remove NAME`
-
-Remove a habit from tracking (with confirmation prompt).
-
-Example:
+### Overview
 
 ```bash
-python main.py remove "Meditate"
+python main.py analytics overview
+```
+
+Shows complete analytics dashboard with totals, due habits, and broken habits.
+
+### Streak Analytics
+
+```bash
+python main.py analytics longest-streak
+python main.py analytics active-streaks
+python main.py analytics habit-streak "Read"
+```
+
+### Habit Lists
+
+```bash
+python main.py analytics list              # All habits
+python main.py analytics list -p daily     # Daily habits only
+python main.py analytics list -p weekly    # Weekly habits only
+python main.py analytics daily-habits      # Daily habits with details
+python main.py analytics weekly-habits     # Weekly habits with details
+```
+
+### Status Checks
+
+```bash
+python main.py analytics due-today         # What needs to be done
+python main.py analytics broken-habits     # What's been missed
 ```
 
 ## Status Indicators
 
-- 🔥 Active streak
+- ✴️ Active streak
 - ⏸️ No current streak
-- 📅 DUE - needs completion
 - ✓ Up to date
-- 💔 BROKEN - missed too many periods
+- DUE - needs completion today/this week
+- BROKEN - missed too many periods
 
 ## Tips
 
-1. Use quotes around habit names with spaces: `"Read Books"`
-2. The CLI remembers all your data in `database/habittracker.db`
-3. Weekly habits reset on Monday
-4. Daily habits reset each day
-5. Use `python main.py COMMAND --help` for detailed command help
+1. **No more command line arguments** - everything is interactive!
+2. **Type `0` to cancel** any selection prompt
+3. **Data persists** in `database/habittracker.db`
+4. **Weekly habits reset on Monday**
+5. **Daily habits reset each day**
+6. **Use `python main.py --help`** to see all available commands

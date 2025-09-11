@@ -1,4 +1,7 @@
+"""Unit Tests covering the Habit Class."""
+
 import pytest
+
 from datetime import datetime, timedelta
 from src.models import Habit, Periodicity
 

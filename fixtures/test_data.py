@@ -1,10 +1,11 @@
-"""Defines a function to create fresh  predefined Habit objects with sample data spanning over four weeks for testing purposes."""
+"""Defines a function to create five predefined Habit objects with sample data spanning over four weeks for testing purposes."""
 
 from src.models import Habit, Periodicity
 from datetime import datetime, timedelta
 
 
 def create_predefined_habits():
+    "Defines five habits and creates four weeks of sample data"
     habit1 = Habit("Read", "Read one chapter", Periodicity.DAILY)
     habit2 = Habit("Stretch", "Stretch for ten minutes", Periodicity.DAILY)
     habit3 = Habit("Take Vitamins", "Take D3 and B12 Vitamins", Periodicity.DAILY)

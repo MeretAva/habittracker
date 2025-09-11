@@ -1,3 +1,5 @@
+"""Setup Script to define metadata on the project: name, version, dependencies, entry points, author, description, version compatibility."""
+
 from setuptools import setup, find_packages
 
 setup(
@@ -11,6 +13,6 @@ setup(
         "console_scripts": ["habittracker=src.cli.cli:cli", "ht=src.cli.cli:cli"],
     },
     author="Meret Ava Ditzler",
-    description="A habit tracking application with analytics and CLI",
+    description="A habit tracking application with analytics and CLI created for the course Object Oriented and Functional Programming with Python",
     python_requires=">=3.7",
 )

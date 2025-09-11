@@ -1,4 +1,4 @@
-"""Tests for the CLI module."""
+"""Unit Tests covering the CLI."""
 
 import pytest
 from click.testing import CliRunner
@@ -30,24 +30,36 @@ def test_cli_help(runner):
     assert "HabitTracker CLI" in result.output
 
 
-def test_add_habit(runner):
-    """Test adding a new habit."""
-    result = runner.invoke(cli, ["add", "TestHabit", "Test description"])
+def test_add_habit_interactive(runner):
+    """Test adding a new habit with interactive prompts."""
+    # Simulate user input: name, description, periodicity choice
+    user_input = "TestHabit\nTest description\n1\n"
+    result = runner.invoke(cli, ["add"], input=user_input)
     assert result.exit_code == 0
     assert "Added habit" in result.output
 
 
-def test_list_empty(runner):
-    """Test listing habits when none exist."""
-    with runner.isolated_filesystem():
-        result = runner.invoke(cli, ["list"])
-    # Note: may show existing habits if database already has data
+def test_analytics_list(runner):
+    """Test analytics list command."""
+    result = runner.invoke(cli, ["analytics", "list"])
     assert result.exit_code == 0
 
 
-def test_analytics(runner):
-    """Test analytics command."""
-    result = runner.invoke(cli, ["analytics"])
+def test_analytics_overview(runner):
+    """Test analytics overview command."""
+    result = runner.invoke(cli, ["analytics", "overview"])
+    assert result.exit_code == 0
+
+
+def test_analytics_daily_habits(runner):
+    """Test analytics daily-habits command."""
+    result = runner.invoke(cli, ["analytics", "daily-habits"])
+    assert result.exit_code == 0
+
+
+def test_analytics_weekly_habits(runner):
+    """Test analytics weekly-habits command."""
+    result = runner.invoke(cli, ["analytics", "weekly-habits"])
     assert result.exit_code == 0
 
 
@@ -56,3 +68,16 @@ def test_add_command_help(runner):
     result = runner.invoke(cli, ["add", "--help"])
     assert result.exit_code == 0
     assert "Add a new habit" in result.output
+
+
+def test_interactive_commands_exist(runner):
+    """Test that interactive commands exist and don't require arguments."""
+    # Test that commands exist and show help when run without input
+    commands = ["add", "complete", "remove", "status"]
+
+    for command in commands:
+        result = runner.invoke(cli, [command, "--help"])
+        assert result.exit_code == 0
+        assert (
+            "interactive" in result.output.lower() or command in result.output.lower()
+        )

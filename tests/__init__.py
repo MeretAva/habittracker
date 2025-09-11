@@ -1,1 +1,1 @@
-"""Test package for habittracker application."""
+"""Test package for HabitTracker application."""
