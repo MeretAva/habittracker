@@ -153,7 +153,7 @@ def get_longest_streak_all_habits(habits: List) -> int:
 
     # Use functional approach: map each habit to its longest streak, then find max
     streaks = [
-        calculate_longest_streak(habit.completions, habit.periodicity)
+        calculate_longest_streak(habit.completions, habit.periodicity.value)
         for habit in habits
     ]
     return max(streaks) if streaks else 0
@@ -170,4 +170,4 @@ def get_longest_streak_for_habit(habit) -> int:
     Returns:
         int: The longest streak for the specified habit
     """
-    return calculate_longest_streak(habit.completions, habit.periodicity)
+    return calculate_longest_streak(habit.completions, habit.periodicity.value)

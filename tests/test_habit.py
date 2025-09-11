@@ -56,3 +56,22 @@ def test_habit_creation():
     assert habit.periodicity == Periodicity.DAILY
     assert habit.id is None
     assert len(habit.completions) == 0
+
+
+def test_get_current_streak(habits):
+    habit = habits[0]
+    current_streak = habit.get_current_streak()
+    assert isinstance(current_streak, int)
+
+
+def test_get_longest_streak(habits):
+    habit = habits[0]
+    longest_streak = habit.get_longest_streak()
+    assert isinstance(longest_streak, int)
+    assert longest_streak > 0
+
+
+def test_streak_methods_no_completions():
+    habit = Habit("New Habit", "No completions yet", "daily")
+    assert habit.get_current_streak() == 0
+    assert habit.get_longest_streak() == 0

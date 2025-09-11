@@ -37,8 +37,10 @@ def test_add_habit(tracker, habit):
 
 def test_remove_habit(tracker, habit):
     tracker.add_habit(habit)
-    tracker.remove_habit(habit)
-    assert habit not in tracker.habits
+    habit_id = habit.id
+    result = tracker.remove_habit(habit_id)
+    assert result is True
+    assert habit_id not in tracker.habits
 
 
 def test_get_habit_by_name(tracker, habit):
@@ -54,15 +56,14 @@ def test_get_all_habits(tracker, habit):
     assert habits[0].name == "Read"
 
 
-# def test_complete_habit(tracker, habit):
-#     """Test completing a habit updates completions"""
-#     tracker.add_habit(habit)
-#     habit_id = habit.id
-#     initial_count = len(habit.completions)
-
-#     streak = tracker.complete_habit(habit_id)
-#     assert len(habit.completions) == initial_count + 1
-#     assert isinstance(streak, int)
+def test_complete_habit(tracker, habit):
+    habit.completions.clear()
+    tracker.add_habit(habit)
+    habit_id = habit.id
+    initial_count = len(habit.completions)
+    streak = tracker.complete_habit(habit_id)
+    assert len(habit.completions) == initial_count + 1
+    assert isinstance(streak, int)
 
 
 def test_get_habits_by_periodicity(tracker, habits):
@@ -78,3 +79,15 @@ def test_get_habits_by_periodicity(tracker, habits):
     assert habits[0] in daily_habits
     assert habits[1] in daily_habits
     assert habits[3] in weekly_habits
+
+
+def test_get_longest_streak_all_habits(tracker, habits):
+    tracker.add_habit(habits[0])
+    tracker.add_habit(habits[3])
+    longest_streak = tracker.get_longest_streak_all_habits()
+    assert isinstance(longest_streak, int)
+    assert longest_streak > 0
+
+
+def test_get_longest_streak_empty_tracker(tracker):
+    assert tracker.get_longest_streak_all_habits() == 0

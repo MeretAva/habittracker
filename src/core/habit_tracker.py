@@ -65,7 +65,6 @@ class HabitTracker:
             # This will raise ValueError if already completed in same period
             habit.mark_completed(timestamp)
             self.data_manager.insert_completion(habit_id, timestamp)
-            habit.completions.append(timestamp)
             return habit.get_current_streak()
         except ValueError as e:
             # Re-raise the validation error from mark_completed
@@ -79,9 +78,9 @@ class HabitTracker:
         """Return the longest streak across all habits using analytics module."""
         return get_longest_streak_all_habits(list(self.habits.values()))
 
-    def get_longest_streak_for_habit(self, habit_id: int) -> Optional[int]:
-        """Return longest streak for a specific habit using analytics module."""
-        habit = self.habits.get(habit_id)
-        if not habit:
-            return None
-        return get_longest_streak_for_habit(habit)
+    # def get_longest_streak_for_habit(self, habit_id: int) -> Optional[int]:
+    #     """Return longest streak for a specific habit using analytics module."""
+    #     habit = self.habits.get(habit_id)
+    #     if not habit:
+    #         return None
+    #     return get_longest_streak_for_habit(habit)
