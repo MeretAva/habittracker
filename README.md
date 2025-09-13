@@ -44,12 +44,12 @@ To install the application please clone the repository onto your local machine a
 3. **Install dependencies**
 
    ```bash
-      pip install -r requirements.txt
+   pip install -r requirements.txt
    ```
 
 4. **Verify installation**
    ```bash
-      python main.py --help
+   python main.py --help
    ```
 
 ## Quick Start
