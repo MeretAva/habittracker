@@ -14,15 +14,14 @@ from src.models import Habit, Periodicity
 
 
 class TestCalculateCurrentStreak:
-    """Test current streak calculations for daily and weekly habits."""
 
     def test_empty_completions(self):
-        """Test current streak with no completions."""
+
         assert calculate_current_streak([], "daily") == 0
         assert calculate_current_streak([], "weekly") == 0
 
     def test_daily_current_streak_consecutive(self):
-        """Test daily current streak with consecutive completions."""
+
         today = datetime.now()
         completions = [
             today,
@@ -33,7 +32,7 @@ class TestCalculateCurrentStreak:
         assert calculate_current_streak(completions, "daily") == 4
 
     def test_daily_current_streak_broken(self):
-        """Test daily current streak with gap in completions."""
+
         today = datetime.now()
         completions = [
             today,
@@ -44,7 +43,7 @@ class TestCalculateCurrentStreak:
         assert calculate_current_streak(completions, "daily") == 2
 
     def test_daily_current_streak_no_today(self):
-        """Test daily current streak when not completed today."""
+
         today = datetime.now()
         completions = [
             today - timedelta(days=1),
@@ -53,7 +52,7 @@ class TestCalculateCurrentStreak:
         assert calculate_current_streak(completions, "daily") == 0
 
     def test_weekly_current_streak_consecutive(self):
-        """Test weekly current streak with consecutive weeks."""
+
         today = datetime.now()
         # Get start of current week (Monday)
         days_since_monday = today.weekday()
@@ -66,7 +65,7 @@ class TestCalculateCurrentStreak:
         assert calculate_current_streak(completions, "weekly") == 3
 
     def test_weekly_current_streak_broken(self):
-        """Test weekly current streak with gap in weeks."""
+
         today = datetime.now()
         days_since_monday = today.weekday()
         this_week = today - timedelta(days=days_since_monday)
@@ -78,22 +77,21 @@ class TestCalculateCurrentStreak:
         assert calculate_current_streak(completions, "weekly") == 2
 
     def test_invalid_periodicity(self):
-        """Test with invalid periodicity returns 0."""
+
         today = datetime.now()
         completions = [today]
         assert calculate_current_streak(completions, "invalid") == 0
 
 
 class TestCalculateLongestStreak:
-    """Test longest streak calculations for daily and weekly habits."""
 
     def test_empty_completions(self):
-        """Test longest streak with no completions."""
+
         assert calculate_longest_streak([], "daily") == 0
         assert calculate_longest_streak([], "weekly") == 0
 
     def test_daily_longest_streak_consecutive(self):
-        """Test daily longest streak with consecutive days."""
+
         today = datetime.now()
         completions = [
             today - timedelta(days=0),
@@ -105,7 +103,7 @@ class TestCalculateLongestStreak:
         assert calculate_longest_streak(completions, "daily") == 5
 
     def test_daily_longest_streak_with_gaps(self):
-        """Test daily longest streak with gaps finding the longest sequence."""
+
         today = datetime.now()
         completions = [
             # First streak: 3 days
@@ -121,7 +119,7 @@ class TestCalculateLongestStreak:
         assert calculate_longest_streak(completions, "daily") == 4
 
     def test_weekly_longest_streak_consecutive(self):
-        """Test weekly longest streak with consecutive weeks."""
+
         today = datetime.now()
         days_since_monday = today.weekday()
         week_start = today - timedelta(days=days_since_monday)
@@ -133,7 +131,7 @@ class TestCalculateLongestStreak:
         assert calculate_longest_streak(completions, "weekly") == 3
 
     def test_weekly_longest_streak_with_gaps(self):
-        """Test weekly longest streak with gaps finding the longest sequence."""
+
         today = datetime.now()
         days_since_monday = today.weekday()
         week_start = today - timedelta(days=days_since_monday)
@@ -149,32 +147,31 @@ class TestCalculateLongestStreak:
         assert calculate_longest_streak(completions, "weekly") == 3
 
     def test_single_completion(self):
-        """Test longest streak with single completion."""
+
         today = datetime.now()
         completions = [today]
         assert calculate_longest_streak(completions, "daily") == 1
         assert calculate_longest_streak(completions, "weekly") == 1
 
     def test_invalid_periodicity(self):
-        """Test with invalid periodicity returns 0."""
+
         today = datetime.now()
         completions = [today]
         assert calculate_longest_streak(completions, "invalid") == 0
 
 
 class TestGetAllHabits:
-    """Test get_all_habits function."""
 
     def test_empty_habits_list(self):
-        """Test with empty habits list."""
+
         assert get_all_habits([]) == []
 
     def test_none_habits_list(self):
-        """Test with None habits list."""
+
         assert get_all_habits(None) == []
 
     def test_returns_copy_of_habits(self):
-        """Test that function returns a copy of the input list."""
+
         habits = [
             Habit("Test1", "Description1", Periodicity.DAILY),
             Habit("Test2", "Description2", Periodicity.WEEKLY),
@@ -190,11 +187,10 @@ class TestGetAllHabits:
 
 
 class TestGetHabitsByPeriodicity:
-    """Test get_habits_by_periodicity function."""
 
     @pytest.fixture
     def mixed_habits(self):
-        """Create habits with different periodicities."""
+        # Create habits with different periodicities
         return [
             Habit("Daily1", "Description1", Periodicity.DAILY),
             Habit("Daily2", "Description2", Periodicity.DAILY),
@@ -204,40 +200,39 @@ class TestGetHabitsByPeriodicity:
         ]
 
     def test_filter_daily_habits(self, mixed_habits):
-        """Test filtering for daily habits."""
+
         daily_habits = get_habits_by_periodicity(mixed_habits, "daily")
         assert len(daily_habits) == 3
         for habit in daily_habits:
             assert habit.periodicity == Periodicity.DAILY
 
     def test_filter_weekly_habits(self, mixed_habits):
-        """Test filtering for weekly habits."""
+
         weekly_habits = get_habits_by_periodicity(mixed_habits, "weekly")
         assert len(weekly_habits) == 2
         for habit in weekly_habits:
             assert habit.periodicity == Periodicity.WEEKLY
 
     def test_empty_habits_list(self):
-        """Test with empty habits list."""
+
         assert get_habits_by_periodicity([], "daily") == []
         assert get_habits_by_periodicity([], "weekly") == []
 
     def test_no_matching_habits(self, mixed_habits):
-        """Test when no habits match the periodicity."""
+
         # Filter for a periodicity that doesn't exist in our test data
         result = get_habits_by_periodicity(mixed_habits, "nonexistent")
         assert result == []
 
 
 class TestGetLongestStreakAllHabits:
-    """Test get_longest_streak_all_habits function."""
 
     def test_empty_habits_list(self):
-        """Test with empty habits list."""
+
         assert get_longest_streak_all_habits([]) == 0
 
     def test_single_habit_with_completions(self):
-        """Test with single habit with completions."""
+
         habit = Habit("Test", "Description", Periodicity.DAILY)
         today = datetime.now()
         habit.completions = [
@@ -248,7 +243,7 @@ class TestGetLongestStreakAllHabits:
         assert get_longest_streak_all_habits([habit]) == 3
 
     def test_multiple_habits_different_streaks(self):
-        """Test with multiple habits having different streak lengths."""
+
         habit1 = Habit("Habit1", "Description1", Periodicity.DAILY)
         habit2 = Habit("Habit2", "Description2", Periodicity.DAILY)
         today = datetime.now()
@@ -266,7 +261,7 @@ class TestGetLongestStreakAllHabits:
         assert get_longest_streak_all_habits([habit1, habit2]) == 5
 
     def test_habits_with_no_completions(self):
-        """Test with habits that have no completions."""
+
         habits = [
             Habit("Habit1", "Description1", Periodicity.DAILY),
             Habit("Habit2", "Description2", Periodicity.WEEKLY),
@@ -275,10 +270,9 @@ class TestGetLongestStreakAllHabits:
 
 
 class TestGetLongestStreakForHabit:
-    """Test get_longest_streak_for_habit function."""
 
     def test_habit_with_completions(self):
-        """Test with habit that has completions."""
+
         habit = Habit("Test", "Description", Periodicity.DAILY)
         today = datetime.now()
         habit.completions = [
@@ -290,12 +284,12 @@ class TestGetLongestStreakForHabit:
         assert get_longest_streak_for_habit(habit) == 4
 
     def test_habit_with_no_completions(self):
-        """Test with habit that has no completions."""
+
         habit = Habit("Test", "Description", Periodicity.DAILY)
         assert get_longest_streak_for_habit(habit) == 0
 
     def test_weekly_habit_with_completions(self):
-        """Test with weekly habit."""
+
         habit = Habit("Test", "Description", Periodicity.WEEKLY)
         today = datetime.now()
         days_since_monday = today.weekday()
@@ -309,11 +303,11 @@ class TestGetLongestStreakForHabit:
 
 
 class TestAnalyticsIntegration:
-    """Integration tests using analytics functions with real habit data."""
+    # Integration tests using analytics functions with real habit data
 
     @pytest.fixture
     def habits_with_streaks(self):
-        """Create habits with specific completion patterns for testing."""
+        # Create habits with specific completion patterns for testing
         today = datetime.now()
         # Daily habit with perfect 7-day streak
         daily_habit = Habit("Daily Exercise", "30 min workout", Periodicity.DAILY)
@@ -326,7 +320,7 @@ class TestAnalyticsIntegration:
         return [daily_habit, weekly_habit]
 
     def test_analytics_integration(self, habits_with_streaks):
-        """Test that all analytics functions work together correctly."""
+
         daily_habit, weekly_habit = habits_with_streaks
         # Test individual habit streaks
         assert get_longest_streak_for_habit(daily_habit) == 7

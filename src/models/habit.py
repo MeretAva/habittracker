@@ -147,18 +147,11 @@ class Habit:
 
         return False
 
-    # def get_completion_count(self) -> int:
-    #     """Return the total number of times this habit has been completed.
-    #     Returns: int: The total count of completions."""
-
-    #     return len(self.completions)
-
     def to_dict(self) -> Dict[str, Any]:
         """Convert the habit to a dictionary representation.
-        Returns: Dict[str, Any]: Dictionary containing all habit data"""
+        Returns: Dict[str, Any]: Dictionary containing all habit data except the ID"""
 
         return {
-            # TODO "id": self.id,
             "name": self.name,
             "description": self.description,
             "periodicity": self.periodicity.value,  # Convert enum to string

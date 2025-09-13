@@ -10,7 +10,7 @@ from src.data import DataManager
 
 @pytest.fixture
 def data_manager():
-    """Create a DataManager with temporary database for testing."""
+    # Create a DataManager with temporary database for testing
     with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as temp_file:
         temp_path = temp_file.name
 
@@ -26,8 +26,7 @@ def data_manager():
 
 @pytest.fixture
 def sample_habit(habits):
-    """Use a habit from fixtures but clear completions for clean
-    testing."""
+
     habit = habits[0]  # "Read" habit
     habit.completions = []  # Clear completions for database testing
     habit.id = None  # Clear ID so database can assign new one
@@ -35,7 +34,6 @@ def sample_habit(habits):
 
 
 def test_create_database_tables(data_manager):
-    """Test that database tables are created properly."""
     # Tables should be created during initialisation
     import sqlite3
 
@@ -56,7 +54,6 @@ def test_create_database_tables(data_manager):
 
 
 def test_insert_habit(data_manager, sample_habit):
-    """Test inserting a new habit."""
     habit_id = data_manager.insert_habit(sample_habit)
 
     assert isinstance(habit_id, int)
@@ -71,13 +68,11 @@ def test_insert_habit(data_manager, sample_habit):
 
 
 def test_load_habits_empty_database(data_manager):
-    """Test loading habits from empty database."""
     habits = data_manager.load_habits()
     assert habits == []
 
 
 def test_load_habits_with_data(data_manager, sample_habit):
-    """Test loading habits with existing data."""
     # Insert test habit
     habit_id = data_manager.insert_habit(sample_habit)
 
@@ -93,7 +88,6 @@ def test_load_habits_with_data(data_manager, sample_habit):
 
 
 def test_load_habit_by_id(data_manager, sample_habit):
-    """Test loading a specific habit by ID."""
     habit_id = data_manager.insert_habit(sample_habit)
 
     # Load by ID
@@ -107,7 +101,6 @@ def test_load_habit_by_id(data_manager, sample_habit):
 
 
 def test_insert_completion(data_manager, sample_habit):
-    """Test inserting habit completions."""
     habit_id = data_manager.insert_habit(sample_habit)
     completion_time = datetime(2025, 1, 2, 8, 0, 0)
 
@@ -121,14 +114,14 @@ def test_insert_completion(data_manager, sample_habit):
 
 
 def test_load_completions_empty(data_manager, sample_habit):
-    """Test loading completions for habit with no completions."""
+
     habit_id = data_manager.insert_habit(sample_habit)
     completions = data_manager.load_completions(habit_id)
     assert completions == []
 
 
 def test_load_completions_multiple(data_manager, sample_habit):
-    """Test loading multiple completions ordered by time."""
+    # Test loading multiple completions ordered by time
     habit_id = data_manager.insert_habit(sample_habit)
 
     # Insert completions in random order
@@ -152,7 +145,7 @@ def test_load_completions_multiple(data_manager, sample_habit):
 
 
 def test_delete_habit(data_manager, sample_habit):
-    """Test deleting a habit and its completions."""
+
     habit_id = data_manager.insert_habit(sample_habit)
 
     # Add some completions
@@ -173,13 +166,13 @@ def test_delete_habit(data_manager, sample_habit):
 
 
 def test_delete_nonexistent_habit(data_manager):
-    """Test deleting a habit that doesn't exist."""
+
     result = data_manager.delete_habit(999)
     assert result is False
 
 
 def test_multiple_habits_isolation(data_manager):
-    """Test that multiple habits and their completions are properly isolated."""
+
     # Create two habits
     habit1 = Habit("Read", "Read daily", Periodicity.DAILY)
     habit2 = Habit("Exercise", "Workout", Periodicity.WEEKLY)
@@ -208,7 +201,7 @@ def test_multiple_habits_isolation(data_manager):
 
 
 def test_datetime_serialization(data_manager):
-    """Test that datetime objects are properly serialized/deserialized."""
+
     created_date = datetime(2025, 1, 1, 10, 30, 45)
     completion_date = datetime(2025, 1, 2, 8, 15, 30)
 

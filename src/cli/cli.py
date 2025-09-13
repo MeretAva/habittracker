@@ -239,7 +239,7 @@ def status(ctx):
 
 @cli.group()
 def analytics():
-    """Analytics and insights for your habits."""
+    """Analytics and insights for habits."""
     pass
 
 
@@ -430,7 +430,12 @@ def due_today(ctx):
 )
 @click.pass_context
 def list(ctx, periodicity: str):
-    """List all tracked habits."""
+    """
+    List all tracked habits.
+
+    Args:
+        periodicity: string defining the periodicity
+    """
     tracker = ctx.obj["tracker"]
 
     if periodicity == "all":
