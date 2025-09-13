@@ -13,33 +13,44 @@ To install the application please clone the repository onto your local machine a
 ### Setup Instructions
 
 1. **Clone the repository**
-      `bash
-   git clone <repository-url>
-   cd habittracker
-   `
 
-2. **Create and activate a virtual environment (recommended)**
-      ```bash
-      # Create virtual environment
-      python -m venv .venv
+   ```bash
+      git clone https://github.com/MeretAva/habittracker
+      cd habittracker
+   ```
 
-# Activate it
-   # On Windows:
-   .venv\Scripts\activate
+2. **Create and activate a virtual environment**
 
-# On macOS/Linux:
-   source .venv/bin/activate
-   ```
+   # Create virtual environment
+
+   ```bash
+   python -m venv .venv
+   ```
+
+   # Activate virtual environment
+
+   # On Windows:
+
+   ```bash
+   .venv\Scripts\activate
+   ```
+
+   # On macOS/Linux:
+
+   ```bash
+   source .venv/bin/activate
+   ```
 
 3. **Install dependencies**
-      `bash
-   pip install -r requirements.txt
-   `
+
+   ```bash
+      pip install -r requirements.txt
+   ```
 
 4. **Verify installation**
-      `bash
-   python main.py --help
-   `
+   ```bash
+      python main.py --help
+   ```
 
 ## Quick Start
 
@@ -77,3 +88,7 @@ pytest tests/
 ## Requirements
 
 See [requirements.txt](requirements.txt) for a complete list of dependencies.
+
+```
+
+```
