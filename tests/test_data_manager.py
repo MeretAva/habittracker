@@ -219,6 +219,8 @@ def test_datetime_serialization(data_manager):
     assert "2025-01-01T10:30:45" in habit_data["created_date"]
     assert completions[0] == completion_date
 
+
+def test_clear_all_habits(data_manager, sample_habit):
     """Test clearing all habits and completions."""
     # Insert test habit and completion
     habit_id = data_manager.insert_habit(sample_habit)
