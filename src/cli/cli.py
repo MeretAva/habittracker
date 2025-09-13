@@ -1,19 +1,23 @@
 """Defines the CLI commands to interact with the HabitTracker"""
 
 import click
-from datetime import datetime
-from typing import Optional
 from ..core.habit_tracker import HabitTracker
 from ..models.habit import Habit
 from ..models.periodicity import Periodicity
 
 
 @click.group()
+@click.option(
+    "--db-path",
+    default="database/habittracker.db",
+    help="Path to the database file",
+    envvar="HABITTRACKER_DB",
+)
 @click.pass_context
-def cli(ctx):
+def cli(ctx, db_path):
     """HabitTracker CLI - Track and analyse your daily habits."""
     ctx.ensure_object(dict)
-    ctx.obj["tracker"] = HabitTracker()
+    ctx.obj["tracker"] = HabitTracker(db_path)
 
 
 @cli.command()
