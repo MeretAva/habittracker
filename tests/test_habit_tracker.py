@@ -22,6 +22,11 @@ def tracker():
 
     # Create tracker with temporary database
     tracker = HabitTracker(temp_path)
+    # Clear any initial data that may have been loaded
+    tracker.data_manager.clear_all_habits()
+    # Clear in memory habits and reload from empty database
+    tracker.habits.clear()
+    tracker._load_habits()
 
     yield tracker  # Provide tracker to test
 

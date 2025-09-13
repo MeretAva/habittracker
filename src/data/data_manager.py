@@ -4,8 +4,7 @@ import sqlite3
 import os
 from datetime import datetime
 from typing import List, Dict, Any, Optional
-from ..models import Habit, Periodicity
-from pathlib import Path
+from ..models import Habit
 
 
 class DataManager:
@@ -21,12 +20,18 @@ class DataManager:
         self.db_path = db_path
         # Create database directory if it doesn't exist
         os.makedirs(os.path.dirname(db_path), exist_ok=True)
-        self.create_database()
+        self._create_database()
 
-    def create_database(self):
+    def _create_database(self):
         """Create database tables if they don't exist."""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
+
+            # Check if database is new (no habits table exists)
+            cursor.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='habits'"
+            )
+            is_new_db = cursor.fetchone() is None
 
             # Habits table
             cursor.execute(
@@ -54,6 +59,30 @@ class DataManager:
             )
 
             conn.commit()
+
+            # Load initial test data if this is a new database
+            if is_new_db:
+                self._load_initial_test_data()
+
+    def _load_initial_test_data(self):
+        """Load the 5 predefined habits with sample completion data."""
+        try:
+            from fixtures.test_data import create_predefined_habits
+
+            initial_habits = create_predefined_habits()
+
+            # Insert each habit and its completions
+            for habit in initial_habits:
+                habit_id = self.insert_habit(habit)
+                habit.id = habit_id
+
+                # Insert all completions for this habit
+                for completion_time in habit.completions:
+                    self.insert_completion(habit_id, completion_time)
+
+        except ImportError:
+            # Fallback: create basic habits without test data if fixtures not available
+            pass
 
     def load_habit_by_id(self, habit_id: int) -> Optional[Dict[str, Any]]:
         """
@@ -232,34 +261,10 @@ class DataManager:
             conn.commit()
             return True
 
-    def close_connection(self):
-        """
-        Close database connection.
-        Note: We use context managers (with statements) so this is optional.
-        """
-        # Not needed since we use context managers, but kept for interface completeness
-        pass
-
-    def _format_timestamp(self, timestamp: datetime) -> str:
-        """
-        Helper method to format datetime as ISO string.
-
-        Args:
-            timestamp: Datetime to format
-
-        Returns:
-            str: ISO formatted timestamp
-        """
-        return timestamp.isoformat()
-
-    def _parse_timestamp(self, timestamp_str: str) -> datetime:
-        """
-        Helper method to parse ISO timestamp string to datetime.
-
-        Args:
-            timestamp_str: ISO formatted timestamp string
-
-        Returns:
-            datetime: Parsed datetime object
-        """
-        return datetime.fromisoformat(timestamp_str)
+    def clear_all_habits(self):
+        """Clear all habits and completions from the database (for testing)."""
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM completions")
+            cursor.execute("DELETE FROM habits")
+            conn.commit()

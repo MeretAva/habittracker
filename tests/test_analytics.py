@@ -8,7 +8,6 @@ from src.analytics import (
     get_all_habits,
     get_habits_by_periodicity,
     get_longest_streak_all_habits,
-    get_longest_streak_for_habit,
 )
 from src.models import Habit, Periodicity
 
@@ -269,39 +268,6 @@ class TestGetLongestStreakAllHabits:
         assert get_longest_streak_all_habits(habits) == 0
 
 
-class TestGetLongestStreakForHabit:
-
-    def test_habit_with_completions(self):
-
-        habit = Habit("Test", "Description", Periodicity.DAILY)
-        today = datetime.now()
-        habit.completions = [
-            today,
-            today - timedelta(days=1),
-            today - timedelta(days=2),
-            today - timedelta(days=3),
-        ]
-        assert get_longest_streak_for_habit(habit) == 4
-
-    def test_habit_with_no_completions(self):
-
-        habit = Habit("Test", "Description", Periodicity.DAILY)
-        assert get_longest_streak_for_habit(habit) == 0
-
-    def test_weekly_habit_with_completions(self):
-
-        habit = Habit("Test", "Description", Periodicity.WEEKLY)
-        today = datetime.now()
-        days_since_monday = today.weekday()
-        week_start = today - timedelta(days=days_since_monday)
-        habit.completions = [
-            week_start,
-            week_start - timedelta(weeks=1),
-            week_start - timedelta(weeks=2),
-        ]
-        assert get_longest_streak_for_habit(habit) == 3
-
-
 class TestAnalyticsIntegration:
     # Integration tests using analytics functions with real habit data
 
@@ -323,8 +289,8 @@ class TestAnalyticsIntegration:
 
         daily_habit, weekly_habit = habits_with_streaks
         # Test individual habit streaks
-        assert get_longest_streak_for_habit(daily_habit) == 7
-        assert get_longest_streak_for_habit(weekly_habit) == 3
+        assert daily_habit.get_longest_streak() == 7
+        assert weekly_habit.get_longest_streak() == 3
         # Test overall maximum streak
         assert get_longest_streak_all_habits(habits_with_streaks) == 7
         # Test filtering by periodicity

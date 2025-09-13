@@ -15,6 +15,8 @@ def data_manager():
         temp_path = temp_file.name
 
     dm = DataManager(temp_path)
+    # Clear any initial data that may have been loaded
+    dm.clear_all_habits()
     yield dm
 
     # Cleanup
@@ -216,3 +218,18 @@ def test_datetime_serialization(data_manager):
     # Note: created_date in database will be ISO string, but completions return datetime objects
     assert "2025-01-01T10:30:45" in habit_data["created_date"]
     assert completions[0] == completion_date
+
+    """Test clearing all habits and completions."""
+    # Insert test habit and completion
+    habit_id = data_manager.insert_habit(sample_habit)
+    data_manager.insert_completion(habit_id, datetime.now())
+
+    # Verify data exists
+    assert len(data_manager.load_habits()) == 1
+    assert len(data_manager.load_completions(habit_id)) == 1
+
+    # Clear all data
+    data_manager.clear_all_habits()
+
+    # Verify data is cleared
+    assert len(data_manager.load_habits()) == 0

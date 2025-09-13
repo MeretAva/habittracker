@@ -1,10 +1,8 @@
-"""Lists dependencies of the project."""
-
 # Core dependencies
 click>=8.0.0
+
+# Development Dependencies
 pytest>=7.0.0
 pytest-cov>=4.0.0
-
-# Optional but recommended for development
 black>=22.0.0
 flake8>=5.0.0

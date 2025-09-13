@@ -518,7 +518,3 @@ def weekly_habits(ctx):
         )
         click.echo(f"   Status: {due_status} {broken_status}")
         click.echo()
-
-
-if __name__ == "__main__":
-    cli()

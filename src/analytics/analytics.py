@@ -157,17 +157,3 @@ def get_longest_streak_all_habits(habits: List) -> int:
         for habit in habits
     ]
     return max(streaks) if streaks else 0
-
-
-def get_longest_streak_for_habit(habit) -> int:
-    """
-    Return the longest run streak for a given habit.
-    Pure function wrapper around calculate_longest_streak.
-
-    Args:
-        habit: Habit object to calculate streak for
-
-    Returns:
-        int: The longest streak for the specified habit
-    """
-    return calculate_longest_streak(habit.completions, habit.periodicity.value)
