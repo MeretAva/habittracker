@@ -12,6 +12,7 @@ from ..models.periodicity import Periodicity
     default="database/habittracker.db",
     help="Path to the database file",
     envvar="HABITTRACKER_DB",
+    hidden=True,
 )
 @click.pass_context
 def cli(ctx, db_path):
