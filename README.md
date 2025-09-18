@@ -1,16 +1,16 @@
-# Object Oriented and Functional Programming with Python – HabitTracker
+### Object Oriented and Functional Programming with Python – HabitTracker
 
 This is the repository for my IU course Object Oriented and Functional Programming with Python. To complete the course I developed a habit tracking application with basic functionality, analytics, and a CLI.
 To install the application please clone the repository onto your local machine and interact with the application using the CLI following the instructions provided in CLI_USAGE.md. Please ensure that the local machine meets defined the requirements and dependencies. For further information please regard the information below:
 
 ## Installation
 
-### Prerequisites
+## Prerequisites
 
 - Python 3.7 or higher
 - pip (Python package installer)
 
-### Setup Instructions
+## Setup Instructions
 
 1. **Clone the repository**
 
@@ -21,21 +21,21 @@ To install the application please clone the repository onto your local machine a
 
 2. **Create and activate a virtual environment**
 
-   # Create virtual environment
+    Create virtual environment
 
    ```bash
    python -m venv .venv
    ```
 
-   # Activate virtual environment
+    Activate virtual environment
 
-   # On Windows:
+    On Windows:
 
    ```bash
    .venv\Scripts\activate
    ```
 
-   # On macOS/Linux:
+    On macOS/Linux:
 
    ```bash
    source .venv/bin/activate
